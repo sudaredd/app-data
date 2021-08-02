@@ -8,12 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -34,7 +31,7 @@ public class MessageController {
 //    @RequestMapping(path="/data/message/SaveAll", method = RequestMethod.POST)
     @SneakyThrows
     @PostMapping("/data/message/SaveAll")
-    public void saveAll(@RequestBody MessageModel message) {
+    public String saveAll(@RequestBody MessageModel message) {
 
         int iterations = 100;
         CountDownLatch countDownLatch = new CountDownLatch(iterations);
@@ -45,7 +42,9 @@ public class MessageController {
             executorService.submit(()->submitTasks(message, countDownLatch));
 
         countDownLatch.await();
-        log.info("sent all messages by "+ Duration.between(now, LocalDateTime.now()).toMillis());
+        long millis = Duration.between(now, LocalDateTime.now()).toMillis();
+        log.info("sent all messages by "+ millis);
+        return String.format("Loaded in %s", millis);
     }
 
     private void submitTasks(MessageModel message, CountDownLatch countDownLatch) {

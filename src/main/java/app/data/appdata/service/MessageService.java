@@ -2,6 +2,7 @@ package app.data.appdata.service;
 
 import app.data.appdata.entity.Message;
 import app.data.appdata.repository.MessageHibernateRepository;
+import app.data.appdata.repository.MessageJdbcRepository;
 import app.data.appdata.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -21,9 +22,13 @@ public class MessageService {
     @Autowired
     private MessageHibernateRepository messageHibernateRepository;
 
+    @Autowired
+    private MessageJdbcRepository messageJdbcRepository;
+
 //    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void saveAll(List<Message> messages) {
-        messageHibernateRepository.saveAll(messages);
+//        messageHibernateRepository.saveAll(messages);
+        messageJdbcRepository.saveAll(messages);
     }
 
     @Service
