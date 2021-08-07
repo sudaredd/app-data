@@ -25,7 +25,7 @@ public class MessageJdbcRepository {
 
     LongAdder longAdder = new LongAdder();
 
-    public void saveAll(List<Message> messages) {
+    public void saveAll_(List<Message> messages) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement pst = connection.prepareStatement(sql)) {
             connection.setAutoCommit(false);
@@ -40,20 +40,21 @@ public class MessageJdbcRepository {
         }
     }
 
-    public void saveAll_(List<Message> messages) {
+    public void saveAll(List<Message> messages) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement pst = connection.prepareStatement(sql)) {
             connection.setAutoCommit(false);
-            for (int i=0; i< messages.size(); i++) {
+            int batchSize = 1000;
+            for (int i = 0; i< messages.size(); i++) {
                 pst.setString(1, messages.get(i).getMessage());
                 pst.addBatch();
                 longAdder.increment();
-                if(longAdder.intValue() % 250 == 0) {
-                    long l = longAdder.longValue()/250;
+                if(longAdder.intValue() % batchSize == 0) {
+                    long l = longAdder.longValue()/ batchSize;
                     runBatch(pst, l);
                 }
             }
-            long l = longAdder.longValue()/250;
+            long l = longAdder.longValue()/ batchSize;
             runBatch(pst, l);
             connection.commit();
             connection.setAutoCommit(true);

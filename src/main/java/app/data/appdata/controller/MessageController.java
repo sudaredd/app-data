@@ -28,7 +28,7 @@ public class MessageController {
 
     ExecutorService executorService = Executors.newFixedThreadPool(10);
 
-//    @RequestMapping(path="/data/message/SaveAll", method = RequestMethod.POST)
+    //    @RequestMapping(path="/data/message/SaveAll", method = RequestMethod.POST)
     @SneakyThrows
     @PostMapping("/data/message/SaveAll")
     public String saveAll(@RequestBody MessageModel message) {
@@ -38,18 +38,18 @@ public class MessageController {
         log.info("send all messages");
         LocalDateTime now = LocalDateTime.now();
 
-        for(int i = 0; i< iterations; i++)
-            executorService.submit(()->submitTasks(message, countDownLatch));
+        for (int i = 0; i < iterations; i++)
+            executorService.submit(() -> submitTasks(message, countDownLatch));
 
         countDownLatch.await();
         long millis = Duration.between(now, LocalDateTime.now()).toMillis();
-        log.info("sent all messages by "+ millis);
+        log.info("sent all messages by " + millis);
         return String.format("Loaded in %s", millis);
     }
 
     private void submitTasks(MessageModel message, CountDownLatch countDownLatch) {
         List<Message> messages = IntStream.rangeClosed(1, message.getCount())
-            .mapToObj(i -> message.getMessage() + " by" + Thread.currentThread().getName() + " "+i)
+            .mapToObj(i -> message.getMessage() + " by" + Thread.currentThread().getName() + " " + i)
             .map(Message::new)
             .collect(Collectors.toList());
         messageService.saveAll(messages);
