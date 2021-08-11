@@ -98,4 +98,16 @@ class StudentRepositoryTest {
         var student = studentRepository.getStudentByEmailAddressNative("sudar@email.com");
         log.info("student {}", student);
     }
+
+    @Test
+    public void testGetStudentByEmailAddressNativeNamedParam() {
+        var student = studentRepository.getStudentByEmailAddressNativeNamedParam("sudar@email.com");
+        log.info("student {}", student);
+    }
+
+    @Test
+    public void testUpdateStudentNameByEmailId() {
+        var rows = studentRepository.updateStudentNameByEmailId("dars kas", "sudar@email.com");
+        log.info("Number of rows updated {}", rows);
+    }
 }
