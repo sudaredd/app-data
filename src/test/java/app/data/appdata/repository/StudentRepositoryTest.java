@@ -5,12 +5,9 @@ import app.data.appdata.entity.Student;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import java.time.LocalDateTime;
 
 @SpringBootTest
 @Slf4j
@@ -19,12 +16,20 @@ class StudentRepositoryTest {
     @Autowired
     private StudentRepository studentRepository;
 
+    int timestamp;
+
+    {
+        LocalDateTime now = LocalDateTime.now();
+
+        timestamp = now.getYear()+ now.getMonthValue()+ now.getDayOfMonth()+ now.getHour()+now.getMinute()+now.getSecond();
+    }
+
     @Test
     public void saveStudent() {
         Student student = Student.builder()
             .firstName("Sudar")
             .lastName("Kasi")
-            .emailId("sudar@email.com")
+            .emailId("sudar@email5"+ timestamp +".com")
             .build();
         studentRepository.save(student);
     }
@@ -32,14 +37,14 @@ class StudentRepositoryTest {
     @Test
     public void saveStudentWithGuardian() {
         Guardian guardian = Guardian.builder()
-            .email("gua@gmail.com")
+            .email("gua@gmail1.com")
             .mobile("999900099")
             .name("Dave Batt")
             .build();
         Student student = Student.builder()
             .firstName("jagan")
             .lastName("beram")
-            .emailId("jaganb@email.com")
+            .emailId("jaganb@email5"+ timestamp +".com")
             .guardian(guardian)
             .build();
         studentRepository.save(student);
